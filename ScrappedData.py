@@ -21,8 +21,6 @@
 # This file is part of LilySurfaceScrapper, a Blender add-on to import materials
 # from a single URL
 
-from .settings import UNSUPPORTED_PROVIDER_ERR
-
 
 class ScrappedData:
     """Internal representation of materials and worlds, responsible on one side for
@@ -48,7 +46,8 @@ class ScrappedData:
         self._variants = None
         self._scrapper = type(self).makeScrapper(url)
         if self._scrapper is None:
-            self.error = UNSUPPORTED_PROVIDER_ERR
+            self.error = "Material provider not supported. See the documentation for a list "
+            "of supported material providers."
         else:
             self._scrapper.texture_root = texture_root
         self.reset()

@@ -34,8 +34,6 @@ from lxml import etree
 import requests
 import shutil
 
-from ..settings import TEXTURE_DIR
-
 
 class AbstractScrapper:
     # Can be 'MATERIAL', 'WORLD'
@@ -62,7 +60,7 @@ class AbstractScrapper:
     def getTextureDirectory(self, material_name):
         """Return the texture dir, relative to the blend file, dependent on material's name"""
         name_path = material_name.replace("/", os.path.sep)
-        dirpath = os.path.join(self.texture_root, TEXTURE_DIR, name_path)
+        dirpath = os.path.join(self.texture_root, "LilySurface", name_path)
         if not os.path.isdir(dirpath):
             os.makedirs(dirpath)
         return dirpath
