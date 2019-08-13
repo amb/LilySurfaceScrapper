@@ -23,12 +23,13 @@
 
 from .AbstractScrapper import AbstractScrapper
 
+
 class TextureHavenScrapper(AbstractScrapper):
     @classmethod
     def canHandleUrl(cls, url):
         """Return true if the URL can be scrapped by this scrapper."""
         return url.startswith("https://texturehaven.com/tex")
-    
+
     def fetchVariantList(self, url):
         """Get a list of available variants.
         The list may be empty, and must be None in case of error."""
@@ -45,7 +46,7 @@ class TextureHavenScrapper(AbstractScrapper):
         self._maps = maps
         self._variants = variants
         return variants
-    
+
     def fetchVariant(self, variant_index, material_data):
         """Fill material_data with data from the selected variant.
         Must fill material_data.name and material_data.maps.
@@ -54,28 +55,33 @@ class TextureHavenScrapper(AbstractScrapper):
         html = self._html
         maps = self._maps
         variants = self._variants
-        
+
         if variant_index < 0 or variant_index >= len(variants):
             self.error = "Invalid variant index: {}".format(variant_index)
             return False
-        
-        base_name = html.xpath("//title/text()")[0].split('|')[0].strip()
+
+        base_name = html.xpath("//title/text()")[0].split("|")[0].strip()
         var_name = variants[variant_index]
-        material_data.name = "texturehaven/" + base_name + '/' + var_name
+        material_data.name = "texturehaven/" + base_name + "/" + var_name
 
         # Translate cgbookcase map names into our internal map names
         maps_tr = {
-            'Diffuse': 'baseColor',
-            'Normal': 'normal',
-            'Specular': 'specular',
-            'Roughness': 'roughness',
-            'Metallic': 'metallic',
+            "Diffuse": "baseColor",
+            "Normal": "normal",
+            "Specular": "specular",
+            "Roughness": "roughness",
+            "Metallic": "metallic",
         }
         for m in maps:
             map_name = m.xpath("div[@class='map-download']//text()")[0]
-            map_url = "https://texturehaven.com" + m.xpath(".//div[@class='res-item']/a/@href")[variant_index]
+            map_url = (
+                "https://texturehaven.com"
+                + m.xpath(".//div[@class='res-item']/a/@href")[variant_index]
+            )
             if map_name in maps_tr:
                 map_name = maps_tr[map_name]
-                material_data.maps[map_name] = self.fetchImage(map_url, material_data.name, map_name)
-        
+                material_data.maps[map_name] = self.fetchImage(
+                    map_url, material_data.name, map_name
+                )
+
         return True

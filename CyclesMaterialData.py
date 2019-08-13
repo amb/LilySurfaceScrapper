@@ -26,15 +26,16 @@ import bpy
 from .MaterialData import MaterialData
 from .cycles_utils import getCyclesImage, autoAlignNodes
 
+
 class CyclesMaterialData(MaterialData):
     # Translate our internal map names into cycles principled inputs
     input_tr = {
-        'baseColor': 'Base Color',
-        'normal': 'Normal',
-        'roughness': 'Roughness',
-        'metallic': 'Metallic',
-        'specular': 'Specular',
-        'opacity': '<custom>',
+        "baseColor": "Base Color",
+        "normal": "Normal",
+        "roughness": "Roughness",
+        "metallic": "Metallic",
+        "specular": "Specular",
+        "opacity": "<custom>",
     }
 
     def loadImages(self):
@@ -53,14 +54,16 @@ class CyclesMaterialData(MaterialData):
         principled = nodes["Principled BSDF"]
         mat_output = nodes["Material Output"]
         principled.inputs["Roughness"].default_value = 1.0
-        
+
         for map_name, img in self.maps.items():
             if img is None or map_name not in __class__.input_tr:
                 continue
             texture_node = nodes.new(type="ShaderNodeTexImage")
             texture_node.image = getCyclesImage(img)
-            texture_node.image.colorspace_settings.name = 'sRGB' if map_name == 'baseColor' else 'Non-Color'
-            if map_name == 'opacity':
+            texture_node.image.colorspace_settings.name = (
+                "sRGB" if map_name == "baseColor" else "Non-Color"
+            )
+            if map_name == "opacity":
                 transparence_node = nodes.new(type="ShaderNodeBsdfTransparent")
                 mix_node = nodes.new(type="ShaderNodeMixShader")
                 links.new(texture_node.outputs[0], mix_node.inputs[0])

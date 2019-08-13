@@ -23,10 +23,12 @@
 
 import os
 import string
-import bpy
 
 import sys
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "site-packages"))
+
+sys.path.append(
+    os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "site-packages")
+)
 from lxml import etree
 
 import requests
@@ -34,9 +36,10 @@ import shutil
 
 from ..settings import TEXTURE_DIR
 
-class AbstractScrapper():
+
+class AbstractScrapper:
     # Can be 'MATERIAL', 'WORLD'
-    scrapped_type = {'MATERIAL'}
+    scrapped_type = {"MATERIAL"}
 
     @classmethod
     def canHandleUrl(cls, url):
@@ -45,7 +48,7 @@ class AbstractScrapper():
     def __init__(self, texture_root=""):
         self.error = None
         self.texture_root = texture_root
-        
+
     def fetchHtml(self, url):
         """Get a lxml.etree object representing the scrapped page.
         Use xpath queries to browse it."""
@@ -55,10 +58,10 @@ class AbstractScrapper():
             return None
         else:
             return etree.HTML(r.text)
-        
+
     def getTextureDirectory(self, material_name):
         """Return the texture dir, relative to the blend file, dependent on material's name"""
-        name_path = material_name.replace('/',os.path.sep)
+        name_path = material_name.replace("/", os.path.sep)
         dirpath = os.path.join(self.texture_root, TEXTURE_DIR, name_path)
         if not os.path.isdir(dirpath):
             os.makedirs(dirpath)
@@ -77,7 +80,7 @@ class AbstractScrapper():
             print("Downloading {}...".format(url))
             r = requests.get(url, stream=True)
             if r.status_code == 200:
-                with open(path, 'wb') as f:
+                with open(path, "wb") as f:
                     r.raw.decode_content = True
                     shutil.copyfileobj(r.raw, f)
             else:
@@ -95,7 +98,7 @@ class AbstractScrapper():
             print("Downloading {}...".format(url))
             r = requests.get(url, stream=True)
             if r.status_code == 200:
-                with open(path, 'wb') as f:
+                with open(path, "wb") as f:
                     r.raw.decode_content = True
                     shutil.copyfileobj(r.raw, f)
             else:
@@ -106,13 +109,13 @@ class AbstractScrapper():
     def clearString(self, s):
         """Remove non printable characters"""
         printable = set(string.printable)
-        return ''.join(filter(lambda x: x in printable, s))
+        return "".join(filter(lambda x: x in printable, s))
 
     def fetchVariantList(self, url):
         """Get a list of available variants.
         The list may be empty, and must be None in case of error."""
         raise NotImplementedError
-    
+
     def fetchVariant(self, variant_index, material_data):
         """Fill material_data with data from the selected variant.
         Must fill material_data.name and material_data.maps.

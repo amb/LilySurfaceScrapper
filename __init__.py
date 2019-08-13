@@ -33,14 +33,33 @@ bl_info = {
     "category": "Import",
 }
 
+
+def install_lib(libname):
+    from subprocess import call
+    import bpy
+    
+    pp = bpy.app.binary_path_python
+    call([pp, "-m", "ensurepip", "--user"])
+    call([pp, "-m", "pip", "install", "--user", libname])
+
+
+try:
+    import lxml  # noqa: F401
+except ModuleNotFoundError:
+    install_lib("lxml")
+    import lxml  # noqa: F401
+
+
 from . import frontend
-from .callback import register_callback
+
 
 def register():
     frontend.register()
-    
+
+
 def unregister():
     frontend.unregister()
+
 
 if __name__ == "__main__":
     register()

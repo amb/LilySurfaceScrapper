@@ -23,14 +23,15 @@
 
 from .AbstractScrapper import AbstractScrapper
 
+
 class HdriHavenScrapper(AbstractScrapper):
-    scrapped_type = {'WORLD'}
+    scrapped_type = {"WORLD"}
 
     @classmethod
     def canHandleUrl(cls, url):
         """Return true if the URL can be scrapped by this scrapper."""
         return url.startswith("https://hdrihaven.com/hdri")
-    
+
     def fetchVariantList(self, url):
         """Get a list of available variants.
         The list may be empty, and must be None in case of error."""
@@ -39,13 +40,15 @@ class HdriHavenScrapper(AbstractScrapper):
             return None
 
         variant_data = html.xpath("//div[@class='download-buttons']/a")
-        variants = [self.clearString(d.xpath(".//div[@class='button']/b/text()")[0]) for d in variant_data]
+        variants = [
+            self.clearString(d.xpath(".//div[@class='button']/b/text()")[0]) for d in variant_data
+        ]
 
         self._html = html
         self._variant_data = variant_data
         self._variants = variants
         return variants
-    
+
     def fetchVariant(self, variant_index, material_data):
         """Fill material_data with data from the selected variant.
         Must fill material_data.name and material_data.maps.
@@ -54,18 +57,18 @@ class HdriHavenScrapper(AbstractScrapper):
         html = self._html
         variant_data = self._variant_data
         variants = self._variants
-        
+
         if variant_index < 0 or variant_index >= len(variants):
             self.error = "Invalid variant index: {}".format(variant_index)
             return False
-        
-        base_name = html.xpath('//h1/b/text()')[0]
-        var_name = variants[variant_index]
-        material_data.name = "hdrihaven/" + base_name + '/' + var_name
 
-        redirect_url = "https://hdrihaven.com" + variant_data[variant_index].attrib['href']
+        base_name = html.xpath("//h1/b/text()")[0]
+        var_name = variants[variant_index]
+        material_data.name = "hdrihaven/" + base_name + "/" + var_name
+
+        redirect_url = "https://hdrihaven.com" + variant_data[variant_index].attrib["href"]
         redirect_html = self.fetchHtml(redirect_url)
         map_url = "https://hdrihaven.com" + redirect_html.xpath("//a[@download]/@href")[0]
-        material_data.maps['sky'] = self.fetchImage(map_url, material_data.name, 'sky')
-        
+        material_data.maps["sky"] = self.fetchImage(map_url, material_data.name, "sky")
+
         return True

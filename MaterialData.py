@@ -24,30 +24,31 @@
 from .ScrappersManager import ScrappersManager
 from .ScrappedData import ScrappedData
 
+
 class MaterialData(ScrappedData):
     """Internal representation of materials, responsible on one side for
     scrapping texture providers and on the other side to build blender materials.
     This class must not use the Blender API. Put Blender related stuff in subclasses
     like CyclesMaterialData."""
-    
+
     def reset(self):
         self.name = "Lily Material"
         self.maps = {
-            'baseColor': None,
-            'normal': None,
-            'opacity': None,
-            'roughness': None,
-            'metallic': None,
-            'specular': None,
+            "baseColor": None,
+            "normal": None,
+            "opacity": None,
+            "roughness": None,
+            "metallic": None,
+            "specular": None,
         }
 
     @classmethod
     def makeScrapper(cls, url):
         for S in ScrappersManager.getScrappersList():
-            if 'MATERIAL' in S.scrapped_type and S.canHandleUrl(url):
+            if "MATERIAL" in S.scrapped_type and S.canHandleUrl(url):
                 return S()
         return None
-    
+
     def loadImages(self):
         """This is not needed by createMaterial, but is called when
         create_material is false to load images anyway
@@ -57,4 +58,3 @@ class MaterialData(ScrappedData):
     def createMaterial(self):
         """Implement this in derived classes"""
         raise NotImplementedError
-    

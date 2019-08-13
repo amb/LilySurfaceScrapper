@@ -23,7 +23,8 @@
 
 from .settings import UNSUPPORTED_PROVIDER_ERR
 
-class ScrappedData():
+
+class ScrappedData:
     """Internal representation of materials and worlds, responsible on one side for
     scrapping texture providers and on the other side to build blender materials.
     This class must not use the Blender API. Put Blender related stuff in subclasses

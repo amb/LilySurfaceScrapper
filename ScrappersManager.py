@@ -25,7 +25,8 @@ import os
 
 from .Scrappers.AbstractScrapper import AbstractScrapper
 
-class ScrappersManager():
+
+class ScrappersManager:
     all_scrappers = None
 
     @staticmethod
@@ -33,6 +34,7 @@ class ScrappersManager():
         """dirty but useful, for one to painlessly write scrapping class
         and just drop them in the scrappers dir"""
         import importlib
+
         scrappers_names = []
         scrappers_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Scrappers")
         for f in os.listdir(scrappers_dir):
@@ -40,9 +42,9 @@ class ScrappersManager():
                 scrappers_names.append(f[:-3])
         scrappers = []
         for s in scrappers_names:
-            module = importlib.import_module('.Scrappers.' + s, package='LilySurfaceScrapper')
+            module = importlib.import_module(".Scrappers." + s, package="LilySurfaceScrapper")
             for x in dir(module):
-                if x == 'AbstractScrapper':
+                if x == "AbstractScrapper":
                     continue
                 m = getattr(module, x)
                 if isinstance(m, type) and issubclass(m, AbstractScrapper):

@@ -21,7 +21,8 @@
 # This file is part of LilySurfaceScrapper, a Blender add-on to import materials
 # from a single URL
 
-## Constants
+# --- Constants
 
 TEXTURE_DIR = "LilySurface"
-UNSUPPORTED_PROVIDER_ERR = "Material provider not supported. See the documentation for a list of supported material providers."
+UNSUPPORTED_PROVIDER_ERR = "Material provider not supported. See the documentation for a list "
+"of supported material providers."

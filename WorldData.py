@@ -24,25 +24,24 @@
 from .ScrappersManager import ScrappersManager
 from .ScrappedData import ScrappedData
 
+
 class WorldData(ScrappedData):
     """Internal representation of world, responsible on one side for
     scrapping texture providers and on the other side to build blender materials.
     This class must not use the Blender API. Put Blender related stuff in subclasses
     like CyclesMaterialData."""
-    
+
     def reset(self):
         self.name = "Lily World"
-        self.maps = {
-            'sky': None,
-        }
+        self.maps = {"sky": None}
 
     @classmethod
     def makeScrapper(cls, url):
         for S in ScrappersManager.getScrappersList():
-            if 'WORLD' in S.scrapped_type and S.canHandleUrl(url):
+            if "WORLD" in S.scrapped_type and S.canHandleUrl(url):
                 return S()
         return None
-    
+
     def loadImages(self):
         """Implement this in derived classes"""
         raise NotImplementedError
@@ -50,4 +49,3 @@ class WorldData(ScrappedData):
     def createWorld(self):
         """Implement this in derived classes"""
         raise NotImplementedError
-    

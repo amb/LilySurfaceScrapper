@@ -25,12 +25,14 @@ import os
 import bpy
 from mathutils import Vector
 
+
 def getCyclesImage(imgpath):
     """Avoid reloading an image that has already been loaded"""
     for img in bpy.data.images:
         if os.path.abspath(img.filepath) == os.path.abspath(imgpath):
             return img
     return bpy.data.images.load(imgpath)
+
 
 def autoAlignNodes(root):
     def makeTree(node):
@@ -45,15 +47,15 @@ def autoAlignNodes(root):
 
     tree = makeTree(root)
 
-    def placeNodes(tree, rootLocation, xstep = 400, ystep = 250):
+    def placeNodes(tree, rootLocation, xstep=400, ystep=250):
         root, children, count = tree
         root.location = rootLocation
-        childLoc = rootLocation + Vector((-xstep, ystep * count / 2.))
+        childLoc = rootLocation + Vector((-xstep, ystep * count / 2.0))
         acc = 0.25
         for child in children:
             print(child[0].name, acc)
-            acc += (child[2]+1)/2.
+            acc += (child[2] + 1) / 2.0
             placeNodes(child, childLoc + Vector((0, -ystep * acc)))
-            acc += (child[2]+1)/2.
+            acc += (child[2] + 1) / 2.0
 
-    placeNodes(tree, Vector((0,0)))
+    placeNodes(tree, Vector((0, 0)))
