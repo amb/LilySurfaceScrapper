@@ -37,7 +37,7 @@ bl_info = {
 def install_lib(libname):
     from subprocess import call
     import bpy
-    
+
     pp = bpy.app.binary_path_python
     call([pp, "-m", "ensurepip", "--user"])
     call([pp, "-m", "pip", "install", "--user", libname])
